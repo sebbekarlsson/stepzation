@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- animate.css from https://daneden.github.io/animate.css/ -->
+        <link rel='stylesheet' type='text/css' href='animate.css'>
+        <link rel='stylesheet' type='text/css' href='style.css'>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet">
+
+        <script type='text/javascript' src='stepzation.js'></script>
+
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+    </head>
+    <body>
+        <div class='paste-styled'>
+            <div class='step-by-step' id='setup'>
+
+                <!-- 0 -->
+                <div class='step-by-step-step split-h'>
+                    <div class='default-content push-down centered-content maximize-height'>
+                        <h3>Hi!</h3>
+                        <p>Welcome to the setup</p>
+                    </div>
+                    <div class='step-by-step-stepper'>
+                        <button class='button button-small button-small-primary material-icons animated pulse infinite' data-type='next'>keyboard_arrow_right</button>
+                    </div>
+                </div>
+
+                <!-- 1 -->
+                <div class='step-by-step-step split-h'>
+                    <div class='default-content push-down centered-content maximize-height'>
+                        <h3>Wow another step!</h3>
+                        <p>
+                        Follow this guide, and we will do something
+                        <br>
+                        together.
+                        </p>
+                    </div>
+                    <div class='step-by-step-stepper'>
+                        <button class='button button-small button-small material-icons' data-type='prev'>keyboard_arrow_left</button>
+                        <button class='button button-small button-small-primary material-icons animated pulse infinite' data-type='next'>keyboard_arrow_right</button>
+                    </div>
+                </div>
+
+                <!-- 2 -->
+                <div class='step-by-step-step split-h' data-name='admin_form'>
+                    <div class='default-content push-down centered-content maximize-height'>
+                        <h3>Another one</h3>
+                        <p>
+                        Another step, yay!
+                        </p>
+                    </div>
+                    <div class='default-content'>
+                        <div class='form'>
+                            <label for='admin_username'>
+                                Username
+                                <input type='text' name='admin_username' id='admin_username' placeholder='john.doe12'/>
+                            </label>
+                            <label for='admin_password'>
+                                Password
+                                <input type='password' name='admin_password' id='admin_password' placeholder='******'/>
+                            </label>
+                            <label for='admin_password_confirm'>
+                                Confirm password 
+                                <input type='password' name='admin_password_confirm' id='admin_password_confirm' placeholder='******'/>
+                            </label>
+                        </div>
+                    </div>
+                    <div class='step-by-step-stepper'>
+                        <button class='button button-small button-small material-icons' data-type='prev'>keyboard_arrow_left</button>
+                        <button class='button button-small button-small-primary material-icons animated pulse infinite' data-type='next'>keyboard_arrow_right</button>
+                    </div>
+                </div>
+
+                <!-- 3 -->
+                <div class='step-by-step-step split-h'>
+                    <div class='default-content push-down centered-content maximize-height'>
+                        <h3>Complete</h3>
+                        <p>
+                        Last step, promise<br>
+                        </p>
+                    </div>
+                    <div class='step-by-step-stepper'>
+                        <button class='button button-small button-small material-icons' data-type='prev'>keyboard_arrow_left</button>
+                        <button class='button button-small button-small-primary material-icons animated pulse infinite' data-type='next'>keyboard_arrow_right</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type='text/javascript'>
+            document.addEventListener('DOMContentLoaded', function(e) {
+                window.stepzation = new Stepzation(document.getElementById('setup'));
+
+                stepzation.next_step_action = function(step) {
+                    if (step.getAttribute('data-name') == 'admin_form') {
+                        stepzation.db['admin'] = {};
+
+                        var username = step.querySelector('#admin_username');
+                        var password = step.querySelector('#admin_password');
+                        var password_confirm = step.querySelector('#admin_password_confirm');
+
+                        stepzation.db['admin']['username'] = username.value;
+                        stepzation.db['admin']['password'] = password.value;
+                        stepzation.db['admin']['password_confirm'] = password_confirm.value;
+
+                        /* You could send a request here for example */
+                        /*(wpost('/api/install', JSON.stringify(stepzation.db), function(data) {
+                            data = JSON.parse(data);
+
+                            if ('error' in data) {
+                                stepzation.previous_step();
+                                stepzation.handle_error(data['error']);
+                            }
+                        })*/
+                    }
+
+                    return []; // ugly hack
+                };
+
+                stepzation.handle_error = function(error) {
+                    backdrop_error(error);
+                };
+
+                stepzation.handle_finish = function(step) {
+                    alert('all steps done');
+                    window.location.href = '/login';
+                };
+
+                stepzation.start();
+            });
+        </script>
+    </body>
+</html>
